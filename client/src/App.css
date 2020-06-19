@@ -40,10 +40,12 @@ a{
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
+  margin-bottom: 1rem;
 }
 .item{
-  width: 30%;
+  width: 25%;
   margin-left: 10px;
+  border: 1px solid #cccccc;
 }
 .home-card{
   max-width: 500px;
@@ -82,4 +84,7 @@ a{
 @keyframes opacidad  {
   0% {opacity: 0;}
   100% {opacity: 1;}
+}
+.collection-item{
+  width: 100%;
 }

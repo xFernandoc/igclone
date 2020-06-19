@@ -21,9 +21,6 @@ const Profile = ()=>{
                 setPerfil(results)
             }
         })
-        if(state){
-            console.log(state)
-        }
     },[])
 
     const followUser = () =>{

@@ -75,4 +75,15 @@ router.put('/actualizarpic', requiredLogin, (req,res)=>{
     }).select("-password")
 })
 
+router.post('/buscar-users',requiredLogin,(req,res)=>{
+    let userQ = new RegExp("^"+req.body.query)
+    User.find({name : {$regex : userQ}})
+    .select("_id name")
+    .then(user=>{
+        res.json(user)
+    }).catch(err=>{
+        res.status(422).json({error : err})
+    })
+})
+
 module.exports = router

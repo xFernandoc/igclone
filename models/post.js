@@ -23,7 +23,11 @@ const postSchme = new mongoose.Schema({
         posttedBy :{
             type : ObjectId,
             ref : "User"
-        }
+        },
+        likeBy : [{
+            type : ObjectId,
+            ref : "User"
+        }]
     }],
     posttedBy :{
         type : ObjectId,

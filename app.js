@@ -24,7 +24,7 @@ mongoose.connection.on('error',(err)=>{
     console.log(`Error : ${err}`)
 })
 
-//app.use(morgan('dev'))
+app.use(morgan('dev'))
 app.use(express.json())
 app.use(routerAuth)
 app.use(routerPosts)

@@ -27,6 +27,7 @@ router.get('/getsubpost',requiredLogin,(req,res)=>{
     .populate("comments.posttedBy","_id name")
     .sort('-createdAt')
     .then((posts)=>{
+        console.log(posts)
         res.status(200).json({posts})
     })
     .catch((err)=>{
@@ -102,6 +103,33 @@ router.put('/comment',requiredLogin,(req,res)=>{
         $push : {comments : comment}
     },{
         new : true
+    }).populate("comments.posttedBy","_id name").exec((err,result)=>{
+        if(err) return res.status(422).json({error : err})
+        res.json(result)
+    })
+})
+
+router.put('/likecomment',requiredLogin,(req,res)=>{
+    Post.findByIdAndUpdate(req.body.postId,{
+        $push : {"comments.$[inner].likeBy" : req.user._id},
+    },{
+        new : true,
+        arrayFilters:[{
+            "inner._id" : req.body.commentId
+        }]
+    }).populate("comments.posttedBy","_id name").exec((err,result)=>{
+        if(err) return res.status(422).json({error : err})
+        res.json(result)
+    })
+})
+router.put('/unlikecomment',requiredLogin,(req,res)=>{
+    Post.findByIdAndUpdate(req.body.postId,{
+        $pull : {"comments.$[inner].likeBy" : req.user._id},
+    },{
+        new : true,
+        arrayFilters:[{
+            "inner._id" : req.body.commentId
+        }]
     }).populate("comments.posttedBy","_id name").exec((err,result)=>{
         if(err) return res.status(422).json({error : err})
         res.json(result)

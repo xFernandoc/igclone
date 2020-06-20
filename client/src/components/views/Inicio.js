@@ -108,6 +108,54 @@ const Home = ()=>{
             console.log(err)
         })
     }
+    const likeComment = (postId,commentId) =>{
+        fetch('/likecomment',{
+            method : "PUT",
+            headers : {
+                "Content-Type" : "application/json",
+                Authorization : `Bearer ${localStorage.getItem("jwt")}`
+            },
+            body : JSON.stringify({postId,commentId})
+        }).then(res=>res.json())
+        .then(result => {
+            const newData = data.map(item=>{
+                if(item._id===result._id){
+                    return result
+                }else{
+                    return item
+                }
+
+            })
+            setData(newData)
+        })
+        .catch(err=>{
+            console.log(err)
+        })
+    }
+    const unlikeComment = (postId,commentId) =>{
+        fetch('/unlikecomment',{
+            method : "PUT",
+            headers : {
+                "Content-Type" : "application/json",
+                Authorization : `Bearer ${localStorage.getItem("jwt")}`
+            },
+            body : JSON.stringify({postId,commentId})
+        }).then(res=>res.json())
+        .then(result => {
+            const newData = data.map(item=>{
+                if(item._id===result._id){
+                    return result
+                }else{
+                    return item
+                }
+
+            })
+            setData(newData)
+        })
+        .catch(err=>{
+            console.log(err)
+        })
+    }
     return(
         <>
             {
@@ -140,7 +188,17 @@ const Home = ()=>{
                                         {
                                             item.comments.map((comment)=>{
                                                 return (
-                                                    <h6 key={comment._id}><span style={{ fontWeight : "500"}} >{comment.posttedBy.name} </span>{comment.text}</h6>
+                                                    <h6 key={comment._id}>
+                                                        <span style={{ fontWeight : "bold", cursor : "pointer"}} className="blue-text text-darken-2" >{comment.posttedBy.name} </span>{comment.text}
+                                                        {
+                                                            comment.likeBy.includes(state._id)
+                                                            ?
+                                                            <i className="right material-icons" style={{cursor : "pointer", color : "red"}} onClick={(e)=>unlikeComment(item._id,comment._id)}>favorite</i>
+                                                            :
+                                                            <i className="right material-icons" style={{cursor : "pointer", color : "red"}} onClick={(e)=>likeComment(item._id,comment._id)}>favorite_border</i>
+                                                        }
+                                                        
+                                                    </h6>
                                                 )
                                             })
                                         }

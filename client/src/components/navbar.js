@@ -67,7 +67,7 @@ const NavBar = ()=>{
         <ul ref={navelement} id="slide-out" className="sidenav">
           {renderList()}
         </ul>
-        <div ref={buscador} id="modal1" className="modal bottom-sheet" style={{color : "black"}}>
+        <div ref={buscador} id="modal1" className="modal" style={{color : "black"}}>
           <div className="container">
             <div className="modal-content">
               <input 

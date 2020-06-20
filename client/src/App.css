@@ -88,3 +88,9 @@ a{
 .collection-item{
   width: 100%;
 }
+.sidenav-trigger i {
+  padding: 0 1rem;
+}
+.sidenav-trigger i:hover{
+  background : #ccc
+}

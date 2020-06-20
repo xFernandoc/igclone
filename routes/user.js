@@ -78,7 +78,7 @@ router.put('/actualizarpic', requiredLogin, (req,res)=>{
 router.post('/buscar-users',requiredLogin,(req,res)=>{
     let userQ = new RegExp("^"+req.body.query)
     User.find({name : {$regex : userQ}})
-    .select("_id name")
+    .select("_id name pic email")
     .then(user=>{
         res.json(user)
     }).catch(err=>{

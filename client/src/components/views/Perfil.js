@@ -3,7 +3,6 @@ import {UserContext} from '../../App'
 const Profile = ()=>{
     const [data,setData] = useState([])
     const {state,dispatch} = useContext(UserContext)
-    const [url, setUrl] = useState("")
     const [image,setImage] = useState("")
     useEffect(()=>{
         fetch('/mypost',{
@@ -30,7 +29,6 @@ const Profile = ()=>{
             })
             .then(res => res.json())
             .then( data => {
-                setUrl(data.url)
                 fetch('/actualizarpic',{
                     method : "PUT",
                     headers : {
@@ -73,7 +71,7 @@ const Profile = ()=>{
                             <div >
                                 <img 
                                     style={{width : "160px", height : "160px", borderRadius : "80px"}}
-                                    src={state ? state.pic : "loading"}
+                                    src={state ? state.pic : ""}
                                     className="perfil"
                                     alt="perfil"
                                 />

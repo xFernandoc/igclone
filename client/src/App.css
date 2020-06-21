@@ -119,10 +119,3 @@ figure img{
   bottom: 0;
   left: 0;
 }
-.new {
-  position: relative;
-}
-.new::before{
-  content: attr(data-len);
-  
-}

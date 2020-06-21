@@ -62,7 +62,10 @@ const NavBar = ()=>{
         }}><i className="material-icons black-text">directions_run </i> Cerrar Sesión</a></li>
       ]
     }else{
-
+      return [
+        <li key="login"><Link to="/login" className="sidenav-close"><i className="material-icons black-text">account_circle</i>Iniciar sesión</Link></li>,
+        <li key="registro"><Link to="/registro" className="sidenav-close"><i className="material-icons black-text">add_circle</i>Unirte</Link></li>,
+      ]
     }
   }
   const getDataApi =  (user) =>{

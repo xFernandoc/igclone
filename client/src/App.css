@@ -119,3 +119,42 @@ figure img{
   bottom: 0;
   left: 0;
 }
+.custom-file-upload {
+  cursor: pointer;
+  font-size: 0.8rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+.img_p:hover>.pupd{
+  filter : grayscale(100%);
+  cursor: pointer;
+}
+.img_p:hover>.updatefoto{
+  display: flex !important;
+}
+.updatefoto{
+  position : absolute;
+  height : 100%;
+  width : 100%;
+  display : none;
+  justify-content : center;
+  align-items : center;
+  left :  0 ;
+  z-index: 9999;
+  color:  white;
+}
+.carga_img{
+  position : absolute;
+  height : 100%;
+  width : 90%;
+  opacity: 0.4;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+}
+.filtro{
+  filter : grayscale(100%);
+}

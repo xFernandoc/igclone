@@ -27,6 +27,8 @@ const Profile = ()=>{
     },[])
 
     const followUser = () =>{
+        let elem = document.getElementById('btns')
+        elem.disabled = true
         fetch("/follow",{
             method : "PUT",
             headers : {
@@ -53,11 +55,14 @@ const Profile = ()=>{
                 }
             })
             setshowfollow(false)
+            elem.disabled = false
         }).catch(err=>{
             console.log(err)
         })
     }
     const unfollowUser = () =>{
+        let elem = document.getElementById('btnds')
+        elem.disabled = true
         fetch("/unfollow",{
             method : "PUT",
             headers : {
@@ -84,6 +89,7 @@ const Profile = ()=>{
                 }
             })
             setshowfollow(true)
+            elem.disabled = false
             
         }).catch(err=>{
             console.log(err)
@@ -95,20 +101,15 @@ const Profile = ()=>{
             ? 
             <div className="prueba row" style={{backgroundColor : "rgba(0, 0, 0, 0.08)", marginBottom : "0px"}}>
                 <div className="col s12 offset-m2 m8 offset-l3 l6">
-                    <div className="card grey lighten-5 z-depth-2">
-                        <div className="row" style={{padding : "1rem"}}>
-                            <div className="col s4" style={{
-                                    display : "flex",
-                                    justifyContent : "center",
-                                    alignItems : "center"
-                                }}>
-                                <div style={{height : "75%", width : "75%"}}>
-                                    <img 
-                                        className="circle responsive-img"
-                                        src={perfilUsuario.user.pic}
-                                        alt="perfil"
-                                    />
-                                </div>
+                    <div className=" grey lighten-5" style={{margin : "1rem 0", padding : "4% 2%"}}>
+                        <div className="row">
+                            <div className="col s4 img_p" style={{position : "relative"}}>
+                                <img 
+                                    className="circle"
+                                    style= {{width : "100%", height : "160px"}}
+                                    src={perfilUsuario.user.pic}
+                                    alt="perfil"
+                                />
                             </div>
                             <div className="col s8">
                                 <div className="clsname">{perfilUsuario.user.name}</div>
@@ -119,14 +120,14 @@ const Profile = ()=>{
                                     <h6>{perfilUsuario.user.following.length} seguidos</h6>
                                 </div>
                             </div>
-                            <div className="col s12">
+                            <div className="col s12 center">
                                 {
                                     showfollow ? 
-                                    <button style={{margin : "1rem 0rem"}} className="btn waves-effect waves-light #64b5f6 blue darken-1" onClick={(e)=>followUser()}>
+                                    <button id="btns" className="btn waves-effect waves-light #64b5f6 blue darken-1" onClick={(e)=>followUser()}>
                                         Seguir
                                     </button>
                                     :
-                                    <button style={{margin : "1rem 0rem"}} className="btn waves-effect waves-light #64b5f6 red darken-1" onClick={(e)=>unfollowUser()}>
+                                    <button id="btnds" className="btn waves-effect waves-light #64b5f6 red darken-1" onClick={(e)=>unfollowUser()}>
                                         Deja de seguir
                                     </button>
                                 }

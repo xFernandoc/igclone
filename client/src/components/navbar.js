@@ -17,20 +17,22 @@ const NavBar = ()=>{
   const renderList = ()=>{
     if(state){
       return[
-        <li key="buscador">
-          <i data-target="modal1" 
-            className="large material-icons modal-trigger" 
-            style={{color :"black", marginRight: "1rem", cursor : "pointer"}}>search</i></li>,
-        <li key="perfil"><Link to="/perfil">Perfil</Link></li>,
-        <li key="publicar"><Link to="/publicar">Nueva publicación</Link></li>,
-        <li key="postsFollowers"><Link to="/myfollowingspost">Siguiendo</Link></li>,
-        <li key="cerrar">
-          <button className="btn waves-effect waves-light #64b5f6 blue darken-1" onClick={()=>{
-            localStorage.clear()
-            dispatch({type : "CLEAR"})
-            history.push("/login")
-          }}>Cerrar Sesión</button>
-        </li>
+        <div key="desk" className="hide-on-med-and-down">
+          <li key="buscador">
+            <i data-target="modal1" 
+              className="large material-icons modal-trigger" 
+              style={{color :"black", marginRight: "1rem", cursor : "pointer"}}>search</i></li>,
+          <li key="perfil"><Link to="/perfil">Perfil</Link></li>,
+          <li key="publicar"><Link to="/publicar">Nueva publicación</Link></li>,
+          <li key="postsFollowers"><Link to="/myfollowingspost">Siguiendo</Link></li>,
+          <li key="cerrar">
+            <button className="btn waves-effect waves-light #64b5f6 blue darken-1" onClick={()=>{
+              localStorage.clear()
+              dispatch({type : "CLEAR"})
+              history.push("/login")
+            }}>Cerrar Sesión</button>
+          </li>
+        </div>
       ]
     }else{
       return [
@@ -55,14 +57,13 @@ const NavBar = ()=>{
   }
     return (
       <div>
-        <nav>
-          <div className="nav-wrapper white">
+        <nav className="nav-wrapper white">
             <Link to={state?"/":"/login"} className="brand-logo left">Instagram</Link>
               <ul id="nav-mobile" className="right hide-on-med-and-down">
                 {renderList()}
               </ul>
-              <a href="#!" data-target="slide-out" className=" btn right transparent sidenav-trigger hide-on-large-only"><i className="material-icons" style={{color : "black"}}>menu</i></a>
-          </div>
+              <a href="#!" data-target="slide-out" className=" right transparent sidenav-trigger hide-on-large-only"><i className="material-icons" style={{color : "black"}}>menu</i></a>
+          
         </nav>
         <ul ref={navelement} id="slide-out" className="sidenav">
           {renderList()}
@@ -72,6 +73,7 @@ const NavBar = ()=>{
             <div className="modal-content">
               <input 
                 type="text"
+                placeholder="Buscar..."
                 value={buscar}
                 onChange={(e)=>{
                   getDataApi(e.target.value)

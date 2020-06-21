@@ -38,23 +38,28 @@ const CreatePost = ()=>{
         }
     },[pic])
     const postDetails = ()=>{
-        const data = new FormData()
         const loader = document.getElementById('loader')
-        loader.style.display="flex";
-        data.append("file",image)
-        data.append("upload_preset","red-insta")
-        data.append("cloud_name","dnayrcm6i")
-        fetch("https://api.cloudinary.com/v1_1/dnayrcm6i/image/upload",{
-            method : "POST",
-            body : data
-        })
-        .then(res => res.json())
-        .then( data => {
-            setUrl(data.url)
-        })
-        .catch(err=>{
-            console.log(err)
-        })
+        loader.style.display="flex"
+        if(image){
+            const data = new FormData()
+            data.append("file",image)
+            data.append("upload_preset","red-insta")
+            data.append("cloud_name","dnayrcm6i")
+            fetch("https://api.cloudinary.com/v1_1/dnayrcm6i/image/upload",{
+                method : "POST",
+                body : data
+            })
+            .then(res => res.json())
+            .then( data => {
+                setUrl(data.url)
+            })
+            .catch(err=>{
+                console.log(err)
+            })
+        }else{
+            M.toast({html : "Campos incompletos",classes : "#388e3c red darken-2"})
+        }
+        loader.style.display ="none"
     }
 
     return (

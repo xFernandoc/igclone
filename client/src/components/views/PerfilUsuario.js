@@ -1,9 +1,11 @@
 import React,{useState,useEffect,useContext} from 'react'
-import {useParams} from 'react-router-dom'
+import {useParams,useHistory} from 'react-router-dom'
 import {UserContext} from '../../App'
+import M from 'materialize-css'
 const Profile = ()=>{
     const [perfilUsuario , setPerfil] = useState(null)
     const {userid} = useParams()
+    const history = useHistory()
     const {state,dispatch} = useContext(UserContext)
     const [showfollow , setshowfollow] = useState(state ? !state.following.includes(userid) : true)
     useEffect(()=>{
@@ -16,7 +18,8 @@ const Profile = ()=>{
         .then(res=>res.json())
         .then(results=>{
             if(results.message){
-                console.log(results.message)
+                M.toast({html : results.message,classes : "#388e3c red darken-2"})
+                history.push('/')
             }else{
                 setPerfil(results)
             }
@@ -90,53 +93,60 @@ const Profile = ()=>{
         <>{
             perfilUsuario 
             ? 
-            <div style={{maxWidth : "80%", margin : "0px auto"}} className="prueba">
-                <div 
-                    style={{
-                        display : "flex",
-                        justifyContent : "space-around",
-                        margin : "18px 0px",
-                        borderBottom : "1px solid grey"
-                    }}
-                    >
-                        <div>
-                            <img 
-                                style={{width : "160px", height : "160px", borderRadius : "80px"}}
-                                src={perfilUsuario.user.pic}
-                                alt="perfil"
-                            />
-                        </div>
-                        <div>
-                            <h4>{perfilUsuario.user.name }</h4>
-                            <h5>{perfilUsuario.user.email }</h5>
-                            <div style={{display : "flex", justifyContent : "space-between", width:"108%"}}>
-                                <h6>{perfilUsuario.posts.length} post</h6>
-                                <h6>{perfilUsuario.user.followers.length} seguidores</h6>
-                                <h6>{perfilUsuario.user.following.length} siguiendo</h6>
+            <div className="prueba row" style={{backgroundColor : "rgba(0, 0, 0, 0.08)", marginBottom : "0px"}}>
+                <div className="col s12 offset-m2 m8 offset-l3 l6">
+                    <div className="card grey lighten-5 z-depth-2">
+                        <div className="row" style={{padding : "1rem"}}>
+                            <div className="col s4" style={{
+                                    display : "flex",
+                                    justifyContent : "center",
+                                    alignItems : "center"
+                                }}>
+                                <div style={{height : "75%", width : "75%"}}>
+                                    <img 
+                                        className="circle responsive-img"
+                                        src={perfilUsuario.user.pic}
+                                        alt="perfil"
+                                    />
+                                </div>
                             </div>
-                            {
-                                showfollow ? 
-                                
-                                <button style={{margin : "1rem 0rem"}} className="btn waves-effect waves-light #64b5f6 blue darken-1" onClick={(e)=>followUser()}>
-                                    Seguir
-                                </button>
-                                :
-                                <button style={{margin : "1rem 0rem"}} className="btn waves-effect waves-light #64b5f6 red darken-1" onClick={(e)=>unfollowUser()}>
-                                    Deja de seguir
-                                </button>
-                            }
-                            
+                            <div className="col s8">
+                                <div className="clsname">{perfilUsuario.user.name}</div>
+                                <div className="clsemail">{perfilUsuario.user.email}</div>
+                                <div className="clsperfil_i">
+                                    <h6>{perfilUsuario.posts.length} post</h6>
+                                    <h6>{perfilUsuario.user.followers.length} seguidores</h6>
+                                    <h6>{perfilUsuario.user.following.length} seguidos</h6>
+                                </div>
+                            </div>
+                            <div className="col s12">
+                                {
+                                    showfollow ? 
+                                    <button style={{margin : "1rem 0rem"}} className="btn waves-effect waves-light #64b5f6 blue darken-1" onClick={(e)=>followUser()}>
+                                        Seguir
+                                    </button>
+                                    :
+                                    <button style={{margin : "1rem 0rem"}} className="btn waves-effect waves-light #64b5f6 red darken-1" onClick={(e)=>unfollowUser()}>
+                                        Deja de seguir
+                                    </button>
+                                }
+                            </div>
                         </div>
                     </div>
-                    <div className="galeria">
-                        {
-                            perfilUsuario.posts.map((e)=>{
-                                return(
-                                    <img key={e._id} className="item" src={e.photo} alt ="post"/>
-                                )
-                            })
-                        }
-                    </div>
+                </div>
+                <div className="col s12 offset-l2 l8" style={{padding : "1rem"}}>
+                        <div className="galeria">
+                            {
+                                perfilUsuario.posts.map((e)=>{
+                                    return(
+                                        <figure key={e._id} className="z-depth-2">
+                                            <img src={e.photo} alt ="post"/>
+                                        </figure>                                        
+                                    )
+                                })
+                            }
+                        </div>
+                </div>
             </div>
             :
             <div style={{

@@ -14,6 +14,7 @@ const Profile = ()=>{
         })
         .then(res=>res.json())
         .then(results=>{
+            console.log(results)
             setData(results.mypost)
         })
     },[])
@@ -55,63 +56,70 @@ const Profile = ()=>{
     return(
         <>
         {
-            data.length>=0 
+            data
             ?
-                <div style={{maxWidth : "80%", margin : "0px auto"}} className="prueba">
-                    <div style={{
-                        margin : "18px 0px",
-                        borderBottom : "1px solid grey"
-                    }}>
-                        <div 
-                        style={{
-                            display : "flex",
-                            justifyContent : "space-around",
-                        }}
-                        >
-                            <div >
-                                <img 
-                                    style={{width : "160px", height : "160px", borderRadius : "80px"}}
-                                    src={state ? state.pic : ""}
-                                    className="perfil"
-                                    alt="perfil"
-                                />
-                            </div>
-                            <div>
-                                <h4>{state ? state.name : "loading"}</h4>
-                                <h6>{state ? state.email : "loading"}</h6>
-                                <div style={{display : "flex", justifyContent : "space-between", width:"108%"}}>
-                                    <h6>{data.length} post</h6>
-                                    <h6>{state ? state.followers.length : "loading"} seguidores</h6>
-                                    <h6>{state ? state.following.length : "loading"} seguidos</h6>
+                
+                <div className="prueba row" style={{backgroundColor : "rgba(0, 0, 0, 0.08)", marginBottom : "0px"}}>
+                    <div className="col s12 offset-m2 m8 offset-l3 l6">
+                        <div className="card grey lighten-5 z-depth-2">
+                            <div className="row" style={{padding : "1rem"}}>
+                                <div className="col s4" style={{
+                                    display : "flex",
+                                    justifyContent : "center",
+                                    alignItems : "center"
+                                }}>
+                                    <div style={{height : "75%", width : "75%"}}>
+                                        <img 
+                                            className="circle responsive-img"
+                                            src={state ? state.pic : ""}
+                                            alt="perfil"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="col s8">
+                                    <div className="clsname">{state ? state.name : "loading"}</div>
+                                    <div className="clsemail">{state ? state.email : "loading"}</div>
+                                    <div className="clsperfil_i">
+                                        <h6>{data.length} post</h6>
+                                        <h6>{state ? state.followers.length : "loading"} seguidores</h6>
+                                        <h6>{state ? state.following.length : "loading"} seguidos</h6>
+                                    </div>
+                                </div>
+                                <div className="col s12">
+                                    <div className="subirimg">
+                                        <div className="file-field input-field">
+                                            <div className="btn  waves-light blue">
+                                                <span>Subir perfil</span>
+                                                <input
+                                                accept="image/x-png,image/gif,image/jpeg"
+                                                type="file"
+                                                onChange={(e)=>subirFoto(e.target.files[0])}
+                                                />
+                                            </div> 
+                                            <div className="file-path-wrapper">
+                                                <input 
+                                                placeholder="Opcional"
+                                                className="file-path validate"
+                                                type="text"/>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        
-                        <div className="file-field input-field">
-                            <div className="btn  waves-light blue">
-                                <span>Subir perfil</span>
-                                <input
-                                accept="image/x-png,image/gif,image/jpeg"
-                                type="file"
-                                onChange={(e)=>subirFoto(e.target.files[0])}
-                                />
-                            </div> 
-                            <div className="file-path-wrapper">
-                                <input 
-                                placeholder="Opcional"
-                                className="file-path validate"
-                                type="text"/>
-                            </div>
-                        </div>
                     </div>
-                    <div className="galeria">
-                        {
-                            data.map((e)=>{
-                                return(
-                                    <img key={e._id} className="item" src={e.photo} alt ="post"/>
-                                )
-                            })
-                        }
+                    <div className="col s12 offset-l2 l8" style={{padding : "1rem"}}>
+                        <div className="galeria">
+                            {
+                                data.map((e)=>{
+                                    return(
+                                        <figure key={e._id} className="z-depth-2">
+                                            <img src={e.photo} alt ="post"/>
+                                        </figure>                                        
+                                    )
+                                })
+                            }
+                        </div>
                     </div>
                 </div>
             :

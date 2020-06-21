@@ -117,7 +117,7 @@ router.put('/likecomment',requiredLogin,(req,res)=>{
         arrayFilters:[{
             "inner._id" : req.body.commentId
         }]
-    }).populate("comments.posttedBy","_id name").exec((err,result)=>{
+    }).populate("comments.posttedBy","_id name").populate("posttedBy","_id name").exec((err,result)=>{
         if(err) return res.status(422).json({error : err})
         res.json(result)
     })
@@ -130,7 +130,8 @@ router.put('/unlikecomment',requiredLogin,(req,res)=>{
         arrayFilters:[{
             "inner._id" : req.body.commentId
         }]
-    }).populate("comments.posttedBy","_id name").exec((err,result)=>{
+    }).populate("comments.posttedBy","_id name")
+    .populate("posttedBy","_id name").exec((err,result)=>{
         if(err) return res.status(422).json({error : err})
         res.json(result)
     })

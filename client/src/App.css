@@ -39,18 +39,15 @@ a{
 .galeria{
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
-  margin-bottom: 1rem;
 }
-.item{
-  width: 25%;
-  margin-left: 10px;
-  border: 1px solid #cccccc;
+.galeria>figure{
+  width: 17rem;
+  height: 15rem;
+  margin: 10px;
 }
-.home-card{
-  max-width: 500px;
-  height: max-content;
-  margin: 26px auto;
+figure img{
+  width: 100%;
+  height: 100%;
 }
 #toast-container{
   top: 30px !important;
@@ -93,4 +90,25 @@ a{
 }
 .sidenav-trigger i:hover{
   background : #ccc
+}
+.clsname{
+  font-weight:  bold;
+  font-size: 150%;
+  line-height: 2rem;
+  color: rgba(0, 0, 0, 0.74);
+}
+.clsperfil_i{
+  display: flex;
+  justify-content: space-between;
+}
+
+@media only screen and (max-width: 600px){
+  .galeria{
+    justify-content: center;
+  }
+  .galeria>figure{
+    width: 30rem;
+    height: 24rem;
+    margin: 10px 0px;
+  }
 }

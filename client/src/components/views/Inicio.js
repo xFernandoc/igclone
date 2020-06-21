@@ -1,10 +1,10 @@
-import React,{useState,useEffect,useContext} from 'react'
+import React,{useState,useEffect,useContext,useRef} from 'react'
 import {UserContext} from '../../App'
 import { Link } from 'react-router-dom'
 
 const Home = ()=>{
     const [data,setData] = useState([])
-    const {state , dispatch } = useContext(UserContext)
+    const {state} = useContext(UserContext)
     useEffect(()=>{
         fetch('/allpost',{
             method : "GET",
@@ -164,7 +164,7 @@ const Home = ()=>{
                         {
                         data.map((item)=>{
                             return(
-                                <div key={item._id} className="col s12 offset-m3 m6">
+                                <div key={item._id} className="col s12 offset-m2 m8 offset-l3 l6">
                                     <div className="card" style={{margin : "0.5rem 0.5rem"}}>
                                         <h5 style={{padding : "1rem"}}>{<Link to={item.posttedBy._id!==state._id ? `/perfil/${item.posttedBy._id}` : "/perfil"} >{item.posttedBy.name}</Link>} {
                                             item.posttedBy._id === state._id  && 
@@ -179,7 +179,7 @@ const Home = ()=>{
                                             {
                                                 item.likes.includes(state._id) 
                                                 ? 
-                                                <i className="material-icons" onClick={()=>{unLikePost(item._id)}} style={{cursor : "pointer", color : "red"}}>favorite</i>
+                                                <i className="material-icons" onClick={()=>{unLikePost(item._id)}} style={{cursor : "pointer", color : "red"}}>favorite </i> 
                                                 :
                                                 <i className="material-icons" onClick={()=>{likePost(item._id)}} style={{cursor : "pointer", color : "red"}}>favorite_border</i>
                                             }{item.likes.length} me gusta</h6>
@@ -190,14 +190,16 @@ const Home = ()=>{
                                                     return (
                                                         <h6 key={comment._id}>
                                                             <span style={{ fontWeight : "bold", cursor : "pointer"}} className="blue-text text-darken-2" >{comment.posttedBy.name} </span>{comment.text}
+                                                                <a className="right" style={{display : "flex"}}>
                                                             {
                                                                 comment.likeBy.includes(state._id)
                                                                 ?
-                                                                <i className="right material-icons" style={{cursor : "pointer", color : "red"}} onClick={(e)=>unlikeComment(item._id,comment._id)}>favorite</i>
+                                                                <i className=" material-icons" style={{cursor : "pointer", color : "red"}} onClick={(e)=>unlikeComment(item._id,comment._id)}>favorite</i>
                                                                 :
-                                                                <i className="right material-icons" style={{cursor : "pointer", color : "red"}} onClick={(e)=>likeComment(item._id,comment._id)}>favorite_border</i>
+                                                                <i className="material-icons" style={{cursor : "pointer", color : "red"}} onClick={(e)=>likeComment(item._id,comment._id)}>favorite_border</i>
                                                             }
-                                                            
+                                                                 <span style={{margin : "1px 2px"}}>{comment.likeBy.length}</span>
+                                                                </a>
                                                         </h6>
                                                     )
                                                 })

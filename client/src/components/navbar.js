@@ -17,7 +17,6 @@ const NavBar = ()=>{
   const renderList = ()=>{
     if(state){
       return[
-        <div key="desk" className="hide-on-med-and-down">
           <li key="buscador">
             <i data-target="modal1" 
               className="large material-icons modal-trigger" 
@@ -32,13 +31,38 @@ const NavBar = ()=>{
               history.push("/login")
             }}>Cerrar Sesión</button>
           </li>
-        </div>
       ]
     }else{
       return [
         <li key="login"><Link to="/login">Login</Link></li>,
         <li key="registro"><Link to="/registro">Registrarse</Link></li>
       ]
+    }
+  }
+  const listNav = ()=>{
+    if(state){
+      return [
+        <li key="perfil_m">
+          <div className="user-view">
+            <div className="background">
+              <img className="responsive-img" src="https://res.cloudinary.com/dnayrcm6i/image/upload/v1592711204/fondo_kekyey.jpg"/>
+            </div>
+            <a href="#user"><img className="circle" src={state ? state.pic : ""} alt="perfil"/></a>
+            <a href="#name"><span className="white-text name">{state ? state.name : ""}</span></a>
+            <a href="#email"><span className="white-text email">{state ? state.email : ""}</span></a>
+          </div>
+        </li>,
+        <li key="perfil"><Link to="/perfil" className="sidenav-close"><i className="material-icons black-text">account_circle</i>Perfil</Link></li>,
+        <li key="publicar"><Link to="/publicar" className="sidenav-close"><i className="material-icons black-text">add_circle</i>Nueva publicación</Link></li>,
+        <li key="seguidores"><Link to="/myfollowingspost" className="sidenav-close"><i className="material-icons black-text">sentiment_very_satisfied</i>Siguiendo</Link></li>,
+        <li key="cerrar" className="fondo sidenav-close"><div className="divider"></div><a onClick={()=>{
+          localStorage.clear()
+          dispatch({type : "CLEAR"})
+          history.push("/login")
+        }}><i className="material-icons black-text">directions_run </i> Cerrar Sesión</a></li>
+      ]
+    }else{
+
     }
   }
   const getDataApi =  (user) =>{
@@ -65,8 +89,8 @@ const NavBar = ()=>{
               <a href="#!" data-target="slide-out" className=" right transparent sidenav-trigger hide-on-large-only"><i className="material-icons" style={{color : "black"}}>menu</i></a>
           
         </nav>
-        <ul ref={navelement} id="slide-out" className="sidenav">
-          {renderList()}
+        <ul ref={navelement} id="slide-out" className="sidenav hide-on-large-only">
+          {listNav()}
         </ul>
         <div ref={buscador} id="modal1" className="modal" style={{color : "black"}}>
           <div className="container">

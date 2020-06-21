@@ -103,7 +103,7 @@ router.put('/comment',requiredLogin,(req,res)=>{
         $push : {comments : comment}
     },{
         new : true
-    }).populate("comments.posttedBy","_id name").exec((err,result)=>{
+    }).populate("posttedBy","_id name").populate("comments.posttedBy","_id name").exec((err,result)=>{
         if(err) return res.status(422).json({error : err})
         res.json(result)
     })

@@ -1,6 +1,7 @@
-import React , {useState, Fragment, useEffect} from 'react'
+import React , {useState, Fragment, useEffect,useContext} from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import M from 'materialize-css'
+import {UserContext} from '../../App'
 
 const Registro = ()=>{
     const history = useHistory()
@@ -9,11 +10,17 @@ const Registro = ()=>{
     const [email,setEmail] = useState("")
     const [image , setImage ] = useState("")
     const [url , setUrl ] = useState(undefined)
+    const {dispatch} = useContext(UserContext)
 
     useEffect(()=>{
         if(url){
             subirData()
         }
+        const user = JSON.parse(localStorage.getItem("user"))
+        if(user){
+            history.push('/')
+        }
+        
     },[url])
 
     const subirPerfil = () =>{
@@ -53,12 +60,27 @@ const Registro = ()=>{
             body : data
         }).then(res => res.json())
         .then(data =>{
-            loader.style.display="none";
             if(data.error){
+                loader.style.display="none";
                 M.toast({html : data.error,classes : "#d32f2f red darken-2"})
             }else{
-                M.toast({html : data.message,classes : "#388e3c green darken-2"})
-                history.push('/login')
+                fetch('/login',{
+                    method : "post",
+                    headers : {
+                        "Content-Type" : "application/json"
+                    },
+                    body : JSON.stringify({email,password})
+                }).then(res => res.json())
+                .then(data =>{
+                    localStorage.setItem("jwt",data.token)
+                    localStorage.setItem("user",JSON.stringify(data.user))
+                    dispatch({
+                        type : "USER",
+                        payload : data.user
+                    })
+                    M.toast({html : "Bienvenido",classes : "#388e3c green darken-2"})
+                    history.push('/perfil')
+                })
             }
         })
     }
@@ -122,7 +144,18 @@ const Registro = ()=>{
                             <input
                             accept="image/x-png,image/gif,image/jpeg"
                             type="file"
-                            onChange={(e)=>setImage(e.target.files[0])}
+                            onChange={(e)=>{
+                                let filename = e.target.files[0]
+                                if((/\.(gif|jpe?g|tiff|png|webp|bmp)$/i).test(filename.name)){
+                                    setImage(e.target.files[0])
+                                }else{
+                                    M.toast(
+                                        {html : "Solo imagenes porfavor",classes : "#388e3c red darken-2"} 
+                                    )
+                                    setImage('')
+                                    e.target.value = ""
+                                }
+                            }}
                             />
                         </div> 
                         <div className="file-path-wrapper">

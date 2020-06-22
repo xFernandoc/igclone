@@ -55,6 +55,11 @@ const NavBar = ()=>{
         <li key="perfil"><Link to="/perfil" className="sidenav-close"><i className="material-icons black-text">account_circle</i>Perfil</Link></li>,
         <li key="publicar"><Link to="/publicar" className="sidenav-close"><i className="material-icons black-text">add_circle</i>Nueva publicación</Link></li>,
         <li key="seguidores"><Link to="/myfollowingspost" className="sidenav-close"><i className="material-icons black-text">sentiment_very_satisfied</i>Siguiendo</Link></li>,
+        <li key="buscador">
+          <a  data-target="modal1" className="sidenav-close modal-trigger">
+            <i className="material-icons black-text">search</i> Buscar
+          </a>
+            </li>,
         <li key="cerrar" className="fondo sidenav-close"><div className="divider"></div><a onClick={()=>{
           localStorage.clear()
           dispatch({type : "CLEAR"})
@@ -83,7 +88,7 @@ const NavBar = ()=>{
     })
   }
     return (
-      <div>
+      <div style={{height : "8vh"}}>
         <div className="navbar-fixed">
           <nav  className="nav-wrapper white">
             <Link to={state?"/":"/login"} className="brand-logo left">Instagram</Link>

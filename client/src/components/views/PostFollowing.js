@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom'
 
 const Home = ()=>{
     const [data,setData] = useState([])
-    const {state } = useContext(UserContext)
+    const {state} = useContext(UserContext)
+    const [loader , setLoader] = useState(true)
     useEffect(()=>{
         fetch('/getsubpost',{
             method : "GET",
@@ -15,6 +16,7 @@ const Home = ()=>{
         })
         .then(res => res.json())
         .then(results=>{
+            setLoader(false)
             setData(results.posts)
         })
     },[])
@@ -159,8 +161,10 @@ const Home = ()=>{
     return(
         <>
             {
-                data.length>0 
+                !loader
                 ?
+                    data.length>0 
+                    ? 
                     <div className="prueba row" style={{backgroundColor : "rgba(0, 0, 0, 0.08)", marginBottom : "0px"}}>
                         {
                             data.map((item)=>{
@@ -218,6 +222,19 @@ const Home = ()=>{
                                 )
                             })
                         }
+                    </div>
+                    :
+                    <div style={{height : "91vh"}}>
+                        <Link to="/">
+                            <div style={{width : "auto", textAlign : "center", height : "100%"}}>
+                                <div style={{height : "10%",
+                                padding : "1rem 0",
+                                fontSize: "1.5rem",
+                                fontFamily: 'Roboto',
+                                color: "#000000b3"}}>Parece que no sigues a nadie</div>
+                                <img style={{width : "100%", height : "90%", objectFit : "contain"}} src="https://res.cloudinary.com/dnayrcm6i/image/upload/v1592808764/3263443_aigj3l.jpg" alt="fondo"/>
+                            </div>
+                        </Link>
                     </div>
                 :
                 <div style={{

@@ -229,15 +229,26 @@ const Home = ()=>{
                                                     )
                                                 })
                                             }
-                                            <form onSubmit={(e)=>{
+                                            <form style={{position : "relative"}} onSubmit={(e)=>{
                                                 e.preventDefault()
-                                                comentar(e.target[0].value,item._id)
+                                                if(e.target[0].value!==''){
+                                                    comentar(e.target[0].value,item._id)
+                                                }
                                                 e.target[0].value=''
                                             }}>
                                                 <input
                                                     type="text"
                                                     placeholder="Escribe un comentario"
                                                 />
+                                                <button className="material-icons"
+                                                    style={{
+                                                        position : "absolute",
+                                                        right: "0%",
+                                                        top: "25%",
+                                                        cursor : "pointer",
+                                                        background : "transparent",
+                                                        border : "0",
+                                                        color: "#1357ad"}}>send</button>
                                             </form>
                                         </div>
                                     </div>

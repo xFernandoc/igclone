@@ -1,4 +1,4 @@
-import React , {useState, Fragment,useContext} from 'react'
+import React , {useState, Fragment,useContext,useEffect} from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import {UserContext} from '../../App'
 import M from 'materialize-css'
@@ -8,6 +8,13 @@ const Login = ()=>{
     const history = useHistory()
     const [password,setPassword] = useState("")
     const [email,setEmail] = useState("")
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem("user"))
+        if(user){
+            history.push('/')
+        }
+    }, [])
 
     const envio = (e) =>{
         e.preventDefault()

@@ -7,9 +7,9 @@ const CreatePost = ()=>{
     const [body , setBody] = useState("")
     const [image , setImage] = useState("")
     const [pic , setUrl] = useState("")
+    const [loader, setLoader] = useState(false)
     useEffect(()=>{
         if(pic){
-            const loader = document.getElementById('loader')
             fetch("/createpost",{
                 method : "post",
                 headers : {
@@ -24,9 +24,9 @@ const CreatePost = ()=>{
             })
             .then(res => res.json())
             .then(data=>{
-                loader.style.display="none"
                 if(data.error){
                     M.toast({html : data.error,classes : "#d32f2f red darken-2"})
+                    setLoader(false)
                 }else{
                     M.toast({html : "Hecho !",classes : "#388e3c green darken-2"})
                     history.push('/')
@@ -38,9 +38,8 @@ const CreatePost = ()=>{
         }
     },[pic])
     const postDetails = ()=>{
-        const loader = document.getElementById('loader')
-        loader.style.display="flex"
-        if(image){
+        if(image && body && title){
+            setLoader(true)
             const data = new FormData()
             data.append("file",image)
             data.append("upload_preset","red-insta")
@@ -59,24 +58,10 @@ const CreatePost = ()=>{
         }else{
             M.toast({html : "Campos incompletos",classes : "#388e3c red darken-2"})
         }
-        loader.style.display ="none"
     }
 
     return (
         <Fragment>
-            <div id="loader">
-                <div className="preloader-wrapper big active">
-                    <div className="spinner-layer spinner-blue-only">
-                    <div className="circle-clipper left">
-                        <div className="circle"></div>
-                    </div><div className="gap-patch">
-                        <div className="circle"></div>
-                    </div><div className="circle-clipper right">
-                        <div className="circle"></div>
-                    </div>
-                    </div>
-                </div>
-            </div>
             <div className="card input-field" style={{maxWidth : "500px",margin:"10px auto",padding : "20px",textAlign : "center"}}>
                 <input
                     type="text"
@@ -105,6 +90,7 @@ const CreatePost = ()=>{
                                     {html : "Solo imagenes porfavor",classes : "#388e3c red darken-2"} 
                                 )
                                 setImage('')
+                                e.target.value = ""
                             }
                         }}
                         />
@@ -115,7 +101,15 @@ const CreatePost = ()=>{
                         type="text"/>
                     </div>
                 </div>
-                <button onClick={()=>postDetails()} className="btn waves-effect waves-light blue">Publicar</button>
+                {
+                    loader ? 
+                    <button onClick={(e)=>postDetails()} className="btn waves-light blue disabled" style={{display : "inline-block"}}>
+                        <div className="loader_p"><span>Publicando </span> <span className="lds-dual-ring"></span></div>
+                    </button>
+                    :
+                    <button onClick={(e)=>postDetails()} className="btn waves-light blue">Publicar</button>
+                }
+                
             </div>
         </Fragment>
     )

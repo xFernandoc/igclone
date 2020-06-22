@@ -82,7 +82,18 @@ const Profile = ()=>{
                                             <input 
                                             accept="image/x-png,image/gif,image/jpeg"
                                             type="file"
-                                            onChange={(e)=>subirFoto(e.target.files[0])}
+                                            onChange={(e)=>{
+                                                let filename = e.target.files[0]
+                                                if((/\.(gif|jpe?g|tiff|png|webp|bmp)$/i).test(filename.name)){
+                                                    subirFoto(e.target.files[0])
+                                                }else{
+                                                    M.toast(
+                                                        {html : "Solo imagenes porfavor",classes : "#388e3c red darken-2"} 
+                                                    )
+                                                    setImage('')
+                                                    e.target.value = ""
+                                                }
+                                            }}
                                             style={{display : "none"}}/>
                                             <i className="material-icons thin" style={{fontSize : "1.7rem"}}>camera_alt</i>
                                         </label>

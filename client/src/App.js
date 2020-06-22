@@ -10,8 +10,11 @@ import CreatePost from './components/views/CreatePost'
 import PerfilUser from './components/views/PerfilUsuario'
 import FollowingPosts from './components/views/PostFollowing'
 import {reducer,initialState} from './reducers/userReducer'
+import io from 'socket.io-client'
 
 export const UserContext = createContext()
+export const socket = io('http://localhost:5000')
+
 
 const Routing = ()=>{
   const history = useHistory()

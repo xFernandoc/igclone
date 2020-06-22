@@ -183,3 +183,8 @@ figure img{
     transform: rotate(360deg);
   }
 }
+.card-image{
+  width: 500px;
+  height: 500px;
+  object-fit: contain;
+}

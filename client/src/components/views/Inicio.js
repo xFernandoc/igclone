@@ -1,12 +1,27 @@
 import React,{useState,useEffect,useContext} from 'react'
-import {UserContext} from '../../App'
+import {UserContext,socket} from '../../App'
 import { Link } from 'react-router-dom'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import M from 'materialize-css'
 
 const Home = ()=>{
     const [data,setData] = useState([])
     const {state} = useContext(UserContext)
+    const [refresh , setRefresh] = useState('')
+    socket.on('post:message',(data)=>{
+        setRefresh(data)
+    })
     useEffect(()=>{
+        getData(false)
+    },[])
+
+    useEffect(()=>{
+        if(refresh){
+            getData(true)
+        }
+    },[refresh])
+
+    const getData = (llave) =>{
         fetch('/allpost',{
             method : "POST",
             headers : {
@@ -14,12 +29,15 @@ const Home = ()=>{
                 "Authorization" : `Bearer ${localStorage.getItem("jwt")}`
             },
             body : JSON.stringify({size : 5})
-        })
-        .then(res => res.json())
+        }).then((res)=>res.json())
         .then(results=>{
             setData(results.posts)
+            if(llave){
+                M.toast({html : "Nuevos posts !",classes : "#388e3c green darken-2"})
+                setRefresh(false)
+            }
         })
-    },[])
+    }
 
     const cargar = () =>{
         let size = data.length +5
@@ -57,6 +75,7 @@ const Home = ()=>{
 
             })
             setData(newData)
+            socket.emit('post:refresh',true)
         })
         .catch(err=>{
             console.log(err)
@@ -82,6 +101,7 @@ const Home = ()=>{
 
             })
             setData(newData)
+            socket.emit('post:refresh',true)
         })
         .catch(err=>{
             console.log(err)
@@ -106,6 +126,7 @@ const Home = ()=>{
 
             })
             setData(newData)
+            socket.emit('post:refresh',true)
         }).catch((err)=>{
             console.log(err)
         })
@@ -122,6 +143,7 @@ const Home = ()=>{
                 return item._id !== result._id
             })
             setData(newData)
+            socket.emit('post:refresh',true)
         }).catch(err=>{
             console.log(err)
         })

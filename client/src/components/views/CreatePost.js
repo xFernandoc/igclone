@@ -1,6 +1,7 @@
 import React,{useState,Fragment,useEffect} from 'react'
 import { useHistory } from 'react-router-dom'
 import M from 'materialize-css'
+import {socket} from '../../App'
 const CreatePost = ()=>{
     const history = useHistory()
     const [title , setTitle] = useState("")
@@ -30,6 +31,7 @@ const CreatePost = ()=>{
                 }else{
                     M.toast({html : "Hecho !",classes : "#388e3c green darken-2"})
                     history.push('/')
+                    socket.emit('post:refresh',true)
                 }
             })
             .catch(err=>{

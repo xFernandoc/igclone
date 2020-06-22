@@ -3,6 +3,7 @@ const app = express()
 //const morgan = require('morgan')
 const mongoose = require('mongoose')
 const {MONGODB,PORT} = require('./config/keys')
+const SocketIo = require('socket.io')
 // models user and post
 require('./models/user')
 require('./models/post')
@@ -38,6 +39,14 @@ if(process.env.NODE_ENV == "production"){
     })
 }
 
-app.listen(PORT, ()=>{
+const server = app.listen(PORT, ()=>{
     console.log("Corriendo")
+})
+
+const io = SocketIo(server)
+
+io.on('connection',(socket)=>{
+    socket.on('post:refresh',(data)=>{
+        io.sockets.emit('post:message',data)
+    })
 })

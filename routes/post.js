@@ -7,7 +7,6 @@ const Post = mongoose.model("Post")
 //view posts
 router.post('/allpost',requiredLogin,(req,res)=>{
     //populate encuentra la data de la ref.
-    console.log(req.body.size)
     Post.find()
     .populate("posttedBy","_id name")
     .populate("comments.posttedBy","_id name")
@@ -42,7 +41,6 @@ router.get('/getsubpost',requiredLogin,(req,res)=>{
 
 router.post('/createpost',requiredLogin,(req,res)=>{
     const { title,body,pic} = req.body
-    console.log(req.body)
     if(!title || !body || !pic) return res.status(422).json({error : "Campos vacios"})
     req.user.password = undefined
     const post = new Post({

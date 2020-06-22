@@ -5,12 +5,14 @@ const requiredLogin = require('../middlewares/requireLogin')
 const Post = mongoose.model("Post")
 
 //view posts
-router.get('/allpost',requiredLogin,(req,res)=>{
+router.post('/allpost',requiredLogin,(req,res)=>{
     //populate encuentra la data de la ref.
+    console.log(req.body.size)
     Post.find()
     .populate("posttedBy","_id name")
     .populate("comments.posttedBy","_id name")
     .sort('-createdAt')
+    .limit(req.body.size)
     .then((posts)=>{
         res.status(200).json({posts})
     })

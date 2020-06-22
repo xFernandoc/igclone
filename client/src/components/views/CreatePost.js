@@ -96,7 +96,17 @@ const CreatePost = ()=>{
                         <input
                         accept="image/x-png,image/gif,image/jpeg"
                         type="file"
-                        onChange={(e)=>setImage(e.target.files[0])}
+                        onChange={(e)=>{
+                            let filename = e.target.files[0]
+                            if((/\.(gif|jpe?g|tiff|png|webp|bmp)$/i).test(filename.name)){
+                                setImage(e.target.files[0])
+                            }else{
+                                M.toast(
+                                    {html : "Solo imagenes porfavor",classes : "#388e3c red darken-2"} 
+                                )
+                                setImage('')
+                            }
+                        }}
                         />
                     </div> 
                     <div className="file-path-wrapper">

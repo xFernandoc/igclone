@@ -84,14 +84,15 @@ const NavBar = ()=>{
   }
     return (
       <div>
-        <nav className="nav-wrapper white">
+        <div className="navbar-fixed">
+          <nav  className="nav-wrapper white">
             <Link to={state?"/":"/login"} className="brand-logo left">Instagram</Link>
               <ul id="nav-mobile" className="right hide-on-med-and-down">
                 {renderList()}
               </ul>
               <a href="#!" data-target="slide-out" className=" right transparent sidenav-trigger hide-on-large-only"><i className="material-icons" style={{color : "black"}}>menu</i></a>
-          
-        </nav>
+          </nav>
+        </div>
         <ul ref={navelement} id="slide-out" className="sidenav hide-on-large-only">
           {listNav()}
         </ul>

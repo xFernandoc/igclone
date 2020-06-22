@@ -1,23 +1,41 @@
-import React,{useState,useEffect,useContext,useRef} from 'react'
+import React,{useState,useEffect,useContext} from 'react'
 import {UserContext} from '../../App'
 import { Link } from 'react-router-dom'
+import InfiniteScroll from 'react-infinite-scroll-component'
 
 const Home = ()=>{
     const [data,setData] = useState([])
     const {state} = useContext(UserContext)
     useEffect(()=>{
         fetch('/allpost',{
-            method : "GET",
+            method : "POST",
             headers : {
                 "Content-Type" : "application/json",
                 "Authorization" : `Bearer ${localStorage.getItem("jwt")}`
             },
+            body : JSON.stringify({size : 5})
         })
         .then(res => res.json())
         .then(results=>{
             setData(results.posts)
         })
     },[])
+
+    const cargar = () =>{
+        let size = data.length +5
+        fetch('/allpost',{
+            method : "POST",
+            headers : {
+                "Content-Type" : "application/json",
+                "Authorization" : `Bearer ${localStorage.getItem("jwt")}`
+            },
+            body : JSON.stringify({size})
+        })
+        .then(res => res.json())
+        .then(results=>{
+            setData(results.posts)
+        })
+    }
 
     const likePost = (id)=>{
         fetch('/like',{
@@ -160,7 +178,13 @@ const Home = ()=>{
         <>
             {
                 data.length>0 ?
-                    <div className="prueba row" style={{backgroundColor : "rgba(0, 0, 0, 0.08)", marginBottom : "0px"}}>
+                <div className="prueba row" style={{backgroundColor : "rgba(0, 0, 0, 0.08)", marginBottom : "0px"}}>
+                    <InfiniteScroll
+                        dataLength={data.length}
+                        hasMore= {true}
+                        loader ={<h4>Cargando ...</h4>}
+                        next = {cargar}
+                    >
                         {
                         data.map((item)=>{
                             return(
@@ -172,7 +196,7 @@ const Home = ()=>{
                                             }
                                         </h5>
                                         <div className="card-image">
-                                            <img src={item.photo}  alt=""/>
+                                            <img src={item.photo} alt=""/>
                                         </div>
                                         <div className="card-content">
                                             <h6 style={{display: "flex", alignItems : "center", marginTop : "0"}}>
@@ -188,9 +212,10 @@ const Home = ()=>{
                                             {
                                                 item.comments.map((comment)=>{
                                                     return (
-                                                        <h6 key={comment._id}>
-                                                            <span style={{ fontWeight : "bold", cursor : "pointer"}} className="blue-text text-darken-2" >{comment.posttedBy.name} </span>{comment.text}
-                                                                <a className="right" style={{display : "flex"}}>
+                                                        <h6 key={comment._id} style={{display : "flex"}}>
+                                                            <span style={{ fontWeight : "bold", cursor : "pointer"}} className="blue-text text-darken-2" >{comment.posttedBy.name} </span>
+                                                            <p style={{display : "inline-block", marginLeft :"2px"}}>{comment.text}</p>
+                                                            <a className="right" style={{display : "flex"}}>
                                                             {
                                                                 comment.likeBy.includes(state._id)
                                                                 ?
@@ -198,8 +223,8 @@ const Home = ()=>{
                                                                 :
                                                                 <i className="material-icons" style={{cursor : "pointer", color : "red"}} onClick={(e)=>likeComment(item._id,comment._id)}>favorite_border</i>
                                                             }
-                                                                 <span style={{margin : "1px 2px"}}>{comment.likeBy.length}</span>
-                                                                </a>
+                                                                <span style={{margin : "1px 2px"}}>{comment.likeBy.length}</span>
+                                                            </a>
                                                         </h6>
                                                     )
                                                 })
@@ -219,8 +244,10 @@ const Home = ()=>{
                                 </div>
                             )
                         })
-                    }
+                        }
+                    </InfiniteScroll>
                 </div>
+                
                 : 
                 <div style={{
                     height : "90vh",

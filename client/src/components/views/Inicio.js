@@ -218,7 +218,7 @@ const Home = ()=>{
                                             }
                                         </h5>
                                         <div className="card-image">
-                                            <img src={item.photo} alt="" style={{height: "100%" , width : "100%",objectFit : "contain"}}/>
+                                            <img src={item.photo}/>
                                         </div>
                                         <div className="card-content">
                                             <h6 style={{display: "flex", alignItems : "center", marginTop : "0"}}>

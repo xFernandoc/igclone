@@ -184,7 +184,10 @@ figure img{
   }
 }
 .card-image{
-  width: 500px;
-  height: 500px;
-  object-fit: contain;
+  height: 25rem;
+}
+.card-image>img{
+  height: 100% !important; 
+  width : 100% !important;
+  object-fit : contain
 }

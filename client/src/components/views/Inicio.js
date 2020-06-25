@@ -8,6 +8,7 @@ const Home = ()=>{
     const {state} = useContext(UserContext)
     const [alerta,setAlerta] = useState(false)
     const [loader,setLoader] = useState(true)
+    const [conectados, setConectados] = useState(1)
     socket.on('post:newPost',(data)=>{
         setAlerta(data)
     })
@@ -26,6 +27,9 @@ const Home = ()=>{
             return item._id !== result._id
         })
         setData(newData)
+    })
+    socket.on('conteo',(num)=>{
+        setConectados(num)
     })
     useEffect(()=>{
         getData()
@@ -245,6 +249,9 @@ const Home = ()=>{
                            Nuevas actualizaciones ! 
                        </div>
                     }
+                    <div className="conectados right hide-on-small-and-down">
+                        {conectados} conectados
+                    </div>
                     <InfiniteScroll
                         dataLength={data.length}
                         hasMore= {true}

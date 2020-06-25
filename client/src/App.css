@@ -190,7 +190,6 @@ figure img{
   height: 3.5rem;
   width: 10%;
   display: flex;
-  justify-content: start;
   margin: 0 0.2rem;
 }
 .comment-img>img{
@@ -231,6 +230,15 @@ figure img{
   33%  {background: rgb(2, 99, 2)}
   66%  {background: rgb(1, 112, 1)}
   100% {background: rgb(1, 99, 1)}
+}
+
+.conectados{
+  position: fixed;
+  margin: 2rem 1rem;
+  background: white;
+  padding: 1rem;
+  font-weight: bold;
+  color : green
 }
 
 

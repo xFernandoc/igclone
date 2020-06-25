@@ -44,15 +44,19 @@ const server = app.listen(PORT, ()=>{
 })
 
 const io = SocketIo(server)
+let connectCounter = 0;
 
 io.on('connection',(socket)=>{
-    socket.on('post:newPost',(data)=>{
-        socket.broadcast.emit('post:newPost',data)
-    })
     socket.on('post:onlypost',(data)=>{
         socket.broadcast.emit('post:onlypost',data)
     })
     socket.on('post:deletePost',(data)=>{
         socket.broadcast.emit('post:deletePost',data)
     })
+    connectCounter++; 
+    socket.on('disconnect', function() { 
+        connectCounter-- 
+        socket.broadcast.emit('conteo',connectCounter)
+    })
+    io.sockets.emit('conteo',connectCounter)
 })

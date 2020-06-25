@@ -13,7 +13,7 @@ import {reducer,initialState} from './reducers/userReducer'
 import io from 'socket.io-client'
 
 export const UserContext = createContext()
-export const socket = io('localhost:5000')
+export const socket = io()
 
   
 const Routing = ()=>{

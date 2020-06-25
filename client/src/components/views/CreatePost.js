@@ -31,7 +31,7 @@ const CreatePost = ()=>{
                 }else{
                     M.toast({html : "Hecho !",classes : "#388e3c green darken-2"})
                     history.push('/')
-                    socket.emit('post:refresh',true)
+                    socket.emit('post:newPost',true)
                 }
             })
             .catch(err=>{

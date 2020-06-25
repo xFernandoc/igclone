@@ -7,11 +7,31 @@ const Post = mongoose.model("Post")
 //view posts
 router.post('/allpost',requiredLogin,(req,res)=>{
     //populate encuentra la data de la ref.
-    Post.find()
+    // slice limit count array
+    Post.find(/*{},{
+        comments : {$slice : req.body.size_comment}
+    }*/)
+    .populate("posttedBy","_id name")
+    .populate("comments.posttedBy","_id name pic")
+    .sort('-createdAt')
+    .limit(req.body.size)
+    .then((posts)=>{
+        res.status(200).json({posts})
+    })
+    .catch((err)=>{
+        res.status(422).json({message : "Error"})
+        console.log(err)
+    })
+})
+
+router.post('/getmorecomments',requiredLogin,(req,res)=>{
+    Post.find({_id : req.body.postId},{
+        comments : {$slice : req.body.size}
+    })
     .populate("posttedBy","_id name")
     .populate("comments.posttedBy","_id name")
     .sort('-createdAt')
-    .limit(req.body.size)
+    .limit(req.body.conteog)
     .then((posts)=>{
         res.status(200).json({posts})
     })
@@ -76,7 +96,7 @@ router.put('/like',requiredLogin,(req,res)=>{
         $push : {likes : req.user.id}
     },{
         new : true
-    }).populate("posttedBy","_id name").populate("comments.posttedBy","_id name").exec((err,result)=>{
+    }).populate("posttedBy","_id name").populate("comments.posttedBy","_id name pic").exec((err,result)=>{
         console.log(result)
         if(err) return res.status(422).json({error : err})
         res.json(result)
@@ -88,7 +108,7 @@ router.put('/unlike',requiredLogin,(req,res)=>{
         $pull : {likes : req.user._id}
     },{
         new : true
-    }).populate("posttedBy","_id name").populate("comments.posttedBy","_id name").exec((err,result)=>{
+    }).populate("posttedBy","_id name").populate("comments.posttedBy","_id name pic").exec((err,result)=>{
         if(err) return res.status(422).json({error : err})
         res.json(result)
     })
@@ -103,7 +123,7 @@ router.put('/comment',requiredLogin,(req,res)=>{
         $push : {comments : comment}
     },{
         new : true
-    }).populate("posttedBy","_id name").populate("comments.posttedBy","_id name").exec((err,result)=>{
+    }).populate("posttedBy","_id name").populate("comments.posttedBy","_id name pic").exec((err,result)=>{
         if(err) return res.status(422).json({error : err})
         res.json(result)
     })
@@ -117,7 +137,7 @@ router.put('/likecomment',requiredLogin,(req,res)=>{
         arrayFilters:[{
             "inner._id" : req.body.commentId
         }]
-    }).populate("comments.posttedBy","_id name").populate("posttedBy","_id name").exec((err,result)=>{
+    }).populate("comments.posttedBy","_id name pic").populate("posttedBy","_id name ").exec((err,result)=>{
         if(err) return res.status(422).json({error : err})
         res.json(result)
     })
@@ -130,7 +150,7 @@ router.put('/unlikecomment',requiredLogin,(req,res)=>{
         arrayFilters:[{
             "inner._id" : req.body.commentId
         }]
-    }).populate("comments.posttedBy","_id name")
+    }).populate("comments.posttedBy","_id name pic")
     .populate("posttedBy","_id name").exec((err,result)=>{
         if(err) return res.status(422).json({error : err})
         res.json(result)

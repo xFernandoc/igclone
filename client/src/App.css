@@ -101,17 +101,6 @@ figure img{
   display: flex;
   justify-content: space-between;
 }
-
-@media only screen and (max-width: 600px){
-  .galeria{
-    justify-content: center;
-  }
-  .galeria>figure{
-    width: 30rem;
-    height: 24rem;
-    margin: 10px 0px;
-  }
-}
 .fondo{
   height: 110px;
   width: 100%;
@@ -190,4 +179,76 @@ figure img{
   height: 100% !important; 
   width : 100% !important;
   object-fit : contain
+}
+.comment {
+  max-height: 6rem !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.comment-img{
+  height: 3.5rem;
+  width: 10%;
+  display: flex;
+  justify-content: start;
+  margin: 0 0.2rem;
+}
+.comment-img>img{
+  object-fit: contain;
+  height: 100%;
+  width: 100%;
+}
+.comment-box{
+  width: 90%;
+  max-height: 5rem;
+  overflow : hidden;
+  border-bottom: 1px solid #ccc;
+  padding: 0.3rem 0.2rem;
+  margin: 0.5rem 0;
+  background-color: rgba(0, 0, 0, 0.08);
+  display: inline-block;
+}
+.comment-autor{
+  font-weight: bold;
+  cursor: pointer;
+  color: #1976D2 !important;
+}
+.alerta{
+  position: fixed;
+  z-index: 999;
+  background: green;
+  width: 100%;
+  color: white !important;
+  font-size: 1rem;
+  padding: 0.2rem 0;
+  text-align: center;
+  font-family: 'Roboto';
+  letter-spacing: 0.1rem;
+  animation: color 1s infinite;
+}
+@keyframes color {
+  0%   {background: rgb(1, 99, 1)}
+  33%  {background: rgb(2, 99, 2)}
+  66%  {background: rgb(1, 112, 1)}
+  100% {background: rgb(1, 99, 1)}
+}
+
+
+@media only screen and (max-width: 600px){
+  .galeria{
+    justify-content: center;
+  }
+  .galeria>figure{
+    width: 30rem;
+    height: 24rem;
+    margin: 10px 0px;
+  }
+  .comment-img{
+    width: 15%;
+    padding: 0 0.2rem;
+  }
+  .comment-box{
+    width: 85%;
+    padding: 0.2rem;
+  }
 }

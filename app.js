@@ -46,7 +46,13 @@ const server = app.listen(PORT, ()=>{
 const io = SocketIo(server)
 
 io.on('connection',(socket)=>{
-    socket.on('post:refresh',(data)=>{
-        io.sockets.emit('post:message',data)
+    socket.on('post:newPost',(data)=>{
+        socket.broadcast.emit('post:newPost',data)
+    })
+    socket.on('post:onlypost',(data)=>{
+        socket.broadcast.emit('post:onlypost',data)
+    })
+    socket.on('post:deletePost',(data)=>{
+        socket.broadcast.emit('post:deletePost',data)
     })
 })

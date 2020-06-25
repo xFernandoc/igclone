@@ -2,40 +2,47 @@ import React,{useState,useEffect,useContext} from 'react'
 import {UserContext,socket} from '../../App'
 import { Link } from 'react-router-dom'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import M from 'materialize-css'
 
 const Home = ()=>{
     const [data,setData] = useState([])
     const {state} = useContext(UserContext)
-    const [refresh , setRefresh] = useState('')
-    socket.on('post:message',(data)=>{
-        setRefresh(data)
+    const [alerta,setAlerta] = useState(false)
+    const [loader,setLoader] = useState(true)
+    socket.on('post:newPost',(data)=>{
+        setAlerta(data)
+    })
+    socket.on('post:onlypost',(results)=>{
+        const newData = data.map(item=>{
+            if(item._id===results._id){
+                return results
+            }else{
+                return item
+            }
+        })
+        setData(newData)
+    })
+    socket.on('post:deletePost',(result)=>{
+        const newData = data.filter(item=>{
+            return item._id !== result._id
+        })
+        setData(newData)
     })
     useEffect(()=>{
-        getData(false)
+        getData()
     },[])
 
-    useEffect(()=>{
-        if(refresh){
-            getData(true)
-        }
-    },[refresh])
-
-    const getData = (llave) =>{
+    const getData = () =>{
         fetch('/allpost',{
             method : "POST",
             headers : {
                 "Content-Type" : "application/json",
                 "Authorization" : `Bearer ${localStorage.getItem("jwt")}`
             },
-            body : JSON.stringify({size : 5})
+            body : JSON.stringify({size : 5/*, size_comment : 5*/})
         }).then((res)=>res.json())
         .then(results=>{
             setData(results.posts)
-            if(llave){
-                M.toast({html : "Nuevos posts !",classes : "#388e3c green darken-2"})
-                setRefresh(false)
-            }
+            setLoader(false)
         })
     }
 
@@ -47,7 +54,7 @@ const Home = ()=>{
                 "Content-Type" : "application/json",
                 "Authorization" : `Bearer ${localStorage.getItem("jwt")}`
             },
-            body : JSON.stringify({size})
+            body : JSON.stringify({size : size/*, size_comment : 5*/})
         })
         .then(res => res.json())
         .then(results=>{
@@ -75,7 +82,7 @@ const Home = ()=>{
 
             })
             setData(newData)
-            socket.emit('post:refresh',true)
+            socket.emit('post:onlypost',results)
         })
         .catch(err=>{
             console.log(err)
@@ -101,7 +108,7 @@ const Home = ()=>{
 
             })
             setData(newData)
-            socket.emit('post:refresh',true)
+            socket.emit('post:onlypost',results)
         })
         .catch(err=>{
             console.log(err)
@@ -126,7 +133,7 @@ const Home = ()=>{
 
             })
             setData(newData)
-            socket.emit('post:refresh',true)
+            socket.emit('post:onlypost',results)
         }).catch((err)=>{
             console.log(err)
         })
@@ -143,7 +150,7 @@ const Home = ()=>{
                 return item._id !== result._id
             })
             setData(newData)
-            socket.emit('post:refresh',true)
+            socket.emit('post:deletePost',result)
         }).catch(err=>{
             console.log(err)
         })
@@ -167,6 +174,7 @@ const Home = ()=>{
 
             })
             setData(newData)
+            socket.emit('post:onlypost',result)
         })
         .catch(err=>{
             console.log(err)
@@ -191,16 +199,52 @@ const Home = ()=>{
 
             })
             setData(newData)
+            socket.emit('post:onlypost',result)
         })
         .catch(err=>{
             console.log(err)
         })
     }
+    const llamarcoments = (id,cont,general) =>{
+        fetch('/getmorecomments',{
+            method : "POST",
+            headers : {
+                "Content-Type" : "application/json",
+                Authorization : `Bearer ${localStorage.getItem("jwt")}`
+            },
+            body : JSON.stringify({postId : id,size : cont+5,conteog : general})
+        }).then(res=>res.json())
+        .then(result => {
+            const results = result.posts[0]
+            const newData = data.map(item=>{
+                if(item._id===results._id){
+                    return results
+                }else{
+                    return item
+                }
+
+            })
+            setData(newData)
+        })
+        .catch(err=>console.log(err))
+    }
+    const goInicio = () =>{
+        window.scroll(0, 0)
+        setAlerta(false)
+        setLoader(true)
+        getData()
+    }
     return(
         <>
             {
-                data.length>0 ?
-                <div className="prueba row" style={{backgroundColor : "rgba(0, 0, 0, 0.08)", marginBottom : "0px"}}>
+                !loader ?
+                <div className="prueba row" style={{backgroundColor : "rgba(0, 0, 0, 0.08)", marginBottom : "0px", position : "relative"}}>
+                    {
+                       alerta &&  
+                       <div className="alerta" onClick={()=>goInicio()}>
+                           Nuevas actualizaciones ! 
+                       </div>
+                    }
                     <InfiniteScroll
                         dataLength={data.length}
                         hasMore= {true}
@@ -231,23 +275,41 @@ const Home = ()=>{
                                             }{item.likes.length} me gusta</h6>
                                             <h6>{item.title}</h6>
                                             <p>{item.body}</p>
+                                            <hr></hr>
                                             {
                                                 item.comments.map((comment)=>{
                                                     return (
-                                                        <h6 key={comment._id} style={{display : "flex"}}>
-                                                            <span style={{ fontWeight : "bold", cursor : "pointer"}} className="blue-text text-darken-2" >{comment.posttedBy.name} </span>
-                                                            <p style={{display : "inline-block", marginLeft :"2px"}}>{comment.text}</p>
-                                                            <a className="right" style={{display : "flex"}}>
-                                                            {
-                                                                comment.likeBy.includes(state._id)
-                                                                ?
-                                                                <i className=" material-icons" style={{cursor : "pointer", color : "red"}} onClick={(e)=>unlikeComment(item._id,comment._id)}>favorite</i>
-                                                                :
-                                                                <i className="material-icons" style={{cursor : "pointer", color : "red"}} onClick={(e)=>likeComment(item._id,comment._id)}>favorite_border</i>
-                                                            }
-                                                                <span style={{margin : "1px 2px"}}>{comment.likeBy.length}</span>
-                                                            </a>
-                                                        </h6>
+                                                        <div key={comment._id}  className="comment">
+                                                            <div className="comment-img">
+                                                                <img
+                                                                    src={comment.posttedBy.pic}
+                                                                />
+                                                            </div>
+                                                            <div className="comment-box">
+                                                                <div className="comment-header">
+                                                                    <Link to={comment.posttedBy._id!==state._id ? `/perfil/${comment.posttedBy._id}` : "/perfil"} className="comment-autor">
+                                                                        {comment.posttedBy.name}
+                                                                    </Link>
+                                                                </div>
+                                                                <div className="comment-body">
+                                                                    <div className="comment-text">
+                                                                        {comment.text}
+                                                                        <span className="right" style={{display : "flex"}}>
+                                                                            {
+                                                                                comment.likeBy.includes(state._id)
+                                                                                ?
+                                                                                <i className=" material-icons" style={{cursor : "pointer", color : "red"}} onClick={(e)=>unlikeComment(item._id,comment._id)}>favorite</i>
+                                                                                :
+                                                                                <i className="material-icons" style={{cursor : "pointer", color : "red"}} onClick={(e)=>likeComment(item._id,comment._id)}>favorite_border</i>
+                                                                            }
+                                                                            {
+                                                                                comment.likeBy.length
+                                                                            }
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     )
                                                 })
                                             }
